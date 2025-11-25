@@ -64,10 +64,20 @@ export interface ConversationBarProps {
    * Callback when user sends a message
    */
   onSendMessage?: (message: string) => void
+
+  /**
+   * Callback to check if connection is allowed (e.g., terms accepted)
+   * Return true to allow connection, false to prevent it
+   */
+  onConnectionRequest?: () => boolean
+}
+
+export interface ConversationBarRef {
+  triggerConnection: () => void
 }
 
 export const ConversationBar = React.forwardRef<
-  HTMLDivElement,
+  ConversationBarRef,
   ConversationBarProps
 >(
   (
@@ -81,6 +91,7 @@ export const ConversationBar = React.forwardRef<
       onError,
       onMessage,
       onSendMessage,
+      onConnectionRequest,
     },
     ref
   ) => {
@@ -138,6 +149,11 @@ export const ConversationBar = React.forwardRef<
     }, [])
 
     const startConversation = React.useCallback(async () => {
+      // Check if connection is allowed (e.g., terms accepted)
+      if (onConnectionRequest && !onConnectionRequest()) {
+        return
+      }
+
       try {
         setAgentState("connecting")
         onConnecting?.()
@@ -154,7 +170,7 @@ export const ConversationBar = React.forwardRef<
         setAgentState("disconnected")
         onError?.(error as Error)
       }
-    }, [conversation, getMicStream, agentId, onConnecting, onError])
+    }, [conversation, getMicStream, agentId, onConnecting, onError, onConnectionRequest])
 
     const handleEndSession = React.useCallback(() => {
       conversation.endSession()
@@ -218,6 +234,19 @@ export const ConversationBar = React.forwardRef<
       [handleSendText]
     )
 
+    // Expose methods to parent via ref
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        triggerConnection: () => {
+          if (agentState === "disconnected") {
+            handleStartOrEnd()
+          }
+        },
+      }),
+      [agentState, handleStartOrEnd]
+    )
+
     React.useEffect(() => {
       return () => {
         if (mediaStreamRef.current) {
@@ -228,7 +257,6 @@ export const ConversationBar = React.forwardRef<
 
     return (
       <div
-        ref={ref}
         className={cn("flex w-full items-end justify-center p-4", className)}
       >
         <Card className="m-0 w-full gap-0 border p-0 shadow-lg">

@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Mic, Volume2, Phone, Loader2 } from "lucide-react"
 import { Conversation, ConversationContent, ConversationScrollButton, ConversationEmptyState } from "@/components/ui/conversation"
-import { ConversationBar } from "@/components/ui/conversation-bar"
+import { ConversationBar, ConversationBarRef } from "@/components/ui/conversation-bar"
+import { TermsDialog } from "@/components/ui/terms-dialog"
 import { toast } from "sonner"
 
 // ConversationMessage interface for conversation history
@@ -35,12 +36,26 @@ function MessageComponent({ source, content, timestamp }: { source: "user" | "ai
   )
 }
 
+const TERMS_ACCEPTANCE_KEY = "voice-ai-terms-accepted"
+
 export default function VoiceAgentSection() {
   // State management
-  const [agentId, setAgentId] = useState(process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID || "")
+  const [agentId] = useState(process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID || "")
   const [messages, setMessages] = useState<ConversationMessage[]>([])
   const [isConnected, setIsConnected] = useState<boolean>(false)
   const [isConnecting, setIsConnecting] = useState<boolean>(false)
+  const [showTermsDialog, setShowTermsDialog] = useState<boolean>(false)
+  const [termsAccepted, setTermsAccepted] = useState<boolean>(false)
+  const [pendingConnection, setPendingConnection] = useState<boolean>(false)
+  const conversationBarRef = useRef<ConversationBarRef>(null)
+
+  // Check localStorage on mount to see if terms were previously accepted
+  useEffect(() => {
+    const hasAccepted = localStorage.getItem(TERMS_ACCEPTANCE_KEY) === "true"
+    if (hasAccepted) {
+      setTermsAccepted(true)
+    }
+  }, [])
 
   // Callback functions for conversation events
   const handleMessage = (message: any) => {
@@ -70,9 +85,46 @@ export default function VoiceAgentSection() {
   const handleConnect = () => {
     setIsConnecting(false)
     setIsConnected(true)
+    setPendingConnection(false)
     toast.success("Connected", {
       description: "Voice agent is ready. You can start speaking now.",
     })
+  }
+
+  const handleTermsAccept = () => {
+    setTermsAccepted(true)
+    setShowTermsDialog(false)
+    // Save acceptance to localStorage
+    localStorage.setItem(TERMS_ACCEPTANCE_KEY, "true")
+    
+    if (pendingConnection) {
+      setPendingConnection(false)
+      // Automatically start the connection after accepting terms
+      setTimeout(() => {
+        conversationBarRef.current?.triggerConnection()
+      }, 100)
+    }
+    
+    toast.success("Terms Accepted", {
+      description: "Connecting to voice agent...",
+    })
+  }
+
+  const handleTermsDecline = () => {
+    setShowTermsDialog(false)
+    setPendingConnection(false)
+    toast.info("Terms Declined", {
+      description: "You must accept the terms to use the voice agent.",
+    })
+  }
+
+  const handleConnectionRequest = () => {
+    if (!termsAccepted) {
+      setPendingConnection(true)
+      setShowTermsDialog(true)
+      return false
+    }
+    return true
   }
 
   const handleDisconnect = () => {
@@ -128,9 +180,21 @@ export default function VoiceAgentSection() {
               </div>
               <span className="text-xl font-bold text-foreground">Voice AI</span>
             </div>
-            <Button variant="outline" size="sm">
-              Documentation
-            </Button>
+            <div className="flex items-center gap-2">
+              {termsAccepted && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowTermsDialog(true)}
+                  className="text-muted-foreground"
+                >
+                  View Terms
+                </Button>
+              )}
+              <Button variant="outline" size="sm">
+                Documentation
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -225,12 +289,14 @@ export default function VoiceAgentSection() {
 
               {/* Conversation Bar */}
               <ConversationBar
+                ref={conversationBarRef}
                 agentId={agentId}
                 onConnecting={handleConnecting}
                 onConnect={handleConnect}
                 onDisconnect={handleDisconnect}
                 onError={handleError}
                 onMessage={handleMessage}
+                onConnectionRequest={handleConnectionRequest}
               />
             </Card>
           </div>
@@ -273,6 +339,13 @@ export default function VoiceAgentSection() {
           </div>
         </div>
       </section>
+
+      {/* Terms and Conditions Dialog */}
+      <TermsDialog
+        open={showTermsDialog}
+        onAccept={handleTermsAccept}
+        onDecline={handleTermsDecline}
+      />
 
       {/* Footer */}
       <footer className="border-t border-border bg-secondary/30 py-12">
