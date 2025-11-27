@@ -192,7 +192,7 @@ export default function VoiceAgentSection() {
                   onClick={() => setShowTermsDialog(true)}
                   className="text-muted-foreground"
                 >
-                  View Termssssssssss
+                  View Terms and Condition
                 </Button>
               )}
             </div>
