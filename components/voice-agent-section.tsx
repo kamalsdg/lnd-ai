@@ -201,31 +201,24 @@ export default function VoiceAgentSection() {
       </header>
 
       {/* Hero Section */}
-      <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-32">
+      <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
             <Phone className="h-4 w-4" />
-            Powered by ElevenLabs
+            Learning & Development Team
           </div>
 
           <h1 className="mb-6 text-balance font-sans text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-            Intelligent Voice Assistant
+            Meet <span className="text-primary">AI</span>shah
           </h1>
 
-          <p className="mb-10 text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            Experience natural conversations with our AI-powered voice agent. Seamlessly integrated, professionally
-            designed, and ready to transform your customer interactions.
+          <p className="mb-4 text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            Your personal AI learning advisor for SD Guthrie employees
           </p>
 
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Mic className="mr-2 h-5 w-5" />
-              Start Conversation
-            </Button>
-            <Button size="lg" variant="outline">
-              Learn More
-            </Button>
-          </div>
+          <p className="mb-10 text-pretty text-base leading-relaxed text-muted-foreground">
+            Aishah is here to help you discover the perfect training programs and courses tailored to your career goals and development needs. Simply have a conversation with Aishah about your background, interests, and learning objectives, and she'll recommend the most suitable Learning & Development programs available at SD Guthrie.
+          </p>
         </div>
       </section>
 
@@ -234,10 +227,10 @@ export default function VoiceAgentSection() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="mb-3 text-balance font-sans text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Voice Agent Integration
+              Start Your Learning Journey
             </h2>
             <p className="mb-8 text-pretty leading-relaxed text-muted-foreground">
-              Connect your ElevenLabs voice agent below to enable real-time voice interactions.
+              Click the phone button below to connect with Aishah and explore training opportunities designed for you.
             </p>
           </div>
 
@@ -270,8 +263,8 @@ export default function VoiceAgentSection() {
                     {messages.length === 0 ? (
                       <ConversationEmptyState
                         icon={<Mic className="h-10 w-10" />}
-                        title="Start a conversation"
-                        description="Click the phone button below to connect with the AI voice agent"
+                        title="Ready to talk with Aishah?"
+                        description="Click the phone button below to start your conversation and discover the best learning programs for you"
                       />
                     ) : (
                       messages.map((msg) => (
@@ -307,14 +300,22 @@ export default function VoiceAgentSection() {
       {/* Features Section */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center mb-12">
+            <h2 className="mb-3 text-balance font-sans text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              How Aishah Can Help You
+            </h2>
+            <p className="text-pretty leading-relaxed text-muted-foreground">
+              Aishah has comprehensive knowledge of all Learning & Development programs at SD Guthrie
+            </p>
+          </div>
           <div className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-xl border border-border bg-card p-8 transition-shadow hover:shadow-md">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Mic className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-foreground">Natural Conversations</h3>
+              <h3 className="mb-3 text-xl font-semibold text-foreground">Personalized Recommendations</h3>
               <p className="leading-relaxed text-muted-foreground">
-                Engage users with lifelike voice interactions powered by advanced AI technology.
+                Share your career goals and background, and Aishah will suggest the most relevant training programs for your development.
               </p>
             </div>
 
@@ -322,9 +323,9 @@ export default function VoiceAgentSection() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Volume2 className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-foreground">Professional Quality</h3>
+              <h3 className="mb-3 text-xl font-semibold text-foreground">Comprehensive Knowledge</h3>
               <p className="leading-relaxed text-muted-foreground">
-                Crystal-clear audio with enterprise-grade reliability and performance.
+                Aishah knows all available courses and programs offered by the Learning & Development team at SD Guthrie.
               </p>
             </div>
 
@@ -332,9 +333,9 @@ export default function VoiceAgentSection() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Phone className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-foreground">Seamless Integration</h3>
+              <h3 className="mb-3 text-xl font-semibold text-foreground">Easy & Conversational</h3>
               <p className="leading-relaxed text-muted-foreground">
-                Quick setup with minimal configuration required. Ready in minutes.
+                Simply talk to Aishah like you would with a colleague. No forms to fill, just natural conversation.
               </p>
             </div>
           </div>
