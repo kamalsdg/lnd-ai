@@ -181,7 +181,7 @@ export default function VoiceAgentSection() {
                 alt="SDG Logo"
                 width={160}
                 height={53}
-                className="h-13 w-auto"
+                className="h-12 w-auto"
               />
             </div>
             <div className="flex items-center gap-2">
